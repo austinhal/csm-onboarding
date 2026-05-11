@@ -117,7 +117,7 @@ function CalendarView({ phases, schedules, profile, setProfile, statuses, notes,
       {/* Header */}
       <div style={{ position: 'relative', background: T.primary, color: '#fff', overflow: 'hidden' }}>
         <RingMotif size={520} color="#ffffff" style={{ top: -180, right: -180 }} />
-        <div style={{ maxWidth: 920, margin: '0 auto', padding: '28px 32px 36px', position: 'relative' }}>
+        <div className="header-inner" style={{ maxWidth: 920, margin: '0 auto', position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
             <BrandMark light size={26} />
             <SummaryButton onClick={onOpenSummary} count={summaryCount} />
@@ -142,7 +142,7 @@ function CalendarView({ phases, schedules, profile, setProfile, statuses, notes,
         <AccentBar height={3} />
       </div>
 
-      <div style={{ maxWidth: 920, margin: '0 auto', padding: '32px' }}>
+      <div className="content-wrap" style={{ maxWidth: 920, margin: '0 auto' }}>
         {!welcomed && (
           <div style={{
             display: 'flex', gap: 20, background: '#fff',
@@ -287,34 +287,37 @@ function WeekRibbon({ currentWeek, weekProgress, tasksByWeek, collapsedWeeks, on
           <button onClick={onCollapseAll} style={ribbonLinkStyle}>Collapse all</button>
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(13, 1fr)', gap: 6 }}>
-        {Array.from({ length: TOTAL_WEEKS }).map((_, i) => {
-          const w = i + 1;
-          const p = weekProgress[w] || 0;
-          const isCurrent = currentWeek === w;
-          const isCollapsed = collapsedWeeks.has(w);
-          const newCount = (tasksByWeek[w] || []).filter(it => it.isStart).length;
-          return (
-            <button key={w} onClick={() => onJump(w)}
-                    style={{
-                      background: isCurrent ? T.primary : (isCollapsed ? '#f7f4eb' : '#e8efff'),
-                      color: isCurrent ? '#fff' : T.inkSoft,
-                      border: 'none', borderRadius: 6, padding: '8px 4px',
-                      cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-                      transition: 'transform 0.1s, background 0.15s',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
-              <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.05em', opacity: 0.75 }}>WK</span>
-              <span style={{ fontFamily: 'Fraunces, serif', fontSize: 16, fontWeight: 500, lineHeight: 1 }}>{w}</span>
-              <div style={{ width: '100%', height: 2.5, background: isCurrent ? 'rgba(255,255,255,0.25)' : T.lineSoft, borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: `${p * 100}%`, background: isCurrent ? '#fff' : T.accent, transition: 'width 0.4s' }} />
-              </div>
-              <span style={{ fontSize: 9.5, opacity: 0.7, fontWeight: 400 }}>{newCount} new</span>
-            </button>
-          );
-        })}
+      <div style={{ overflowX: 'auto', margin: '0 -4px' }}>
+        <div style={{ display: 'flex', gap: 6, minWidth: 'max-content', padding: '0 4px 4px' }}>
+          {Array.from({ length: TOTAL_WEEKS }).map((_, i) => {
+            const w = i + 1;
+            const p = weekProgress[w] || 0;
+            const isCurrent = currentWeek === w;
+            const isCollapsed = collapsedWeeks.has(w);
+            const newCount = (tasksByWeek[w] || []).filter(it => it.isStart).length;
+            return (
+              <button key={w} onClick={() => onJump(w)}
+                      style={{
+                        background: isCurrent ? T.primary : (isCollapsed ? '#f7f4eb' : '#e8efff'),
+                        color: isCurrent ? '#fff' : T.inkSoft,
+                        border: 'none', borderRadius: 6, padding: '8px 6px',
+                        cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                        minWidth: 48, flexShrink: 0,
+                        transition: 'transform 0.1s, background 0.15s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
+                <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.05em', opacity: 0.75 }}>WK</span>
+                <span style={{ fontFamily: 'Fraunces, serif', fontSize: 16, fontWeight: 500, lineHeight: 1 }}>{w}</span>
+                <div style={{ width: '100%', height: 2.5, background: isCurrent ? 'rgba(255,255,255,0.25)' : T.lineSoft, borderRadius: 2, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${p * 100}%`, background: isCurrent ? '#fff' : T.accent, transition: 'width 0.4s' }} />
+                </div>
+                <span style={{ fontSize: 9.5, opacity: 0.7, fontWeight: 400 }}>{newCount} new</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
